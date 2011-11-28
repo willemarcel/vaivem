@@ -1,0 +1,35 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+     <a href="../../../">{% trans "Home" %}</a> &rsaquo;
+     <a href="../">{{ app_label|capfirst }}</a> &rsaquo;
+     <a href="./">{{ opts.verbose_name_plural|capfirst }}</a> &rsaquo;
+     {% trans 'Registro de Empréstimo' %}
+</div>
+{% endblock %}
+
+{% block content %}
+    <p>{% blocktrans %}<b>Relatório de Empréstimo de Equipamentos</b>{% endblocktrans %}</p><br>
+        <p>Usuário: <b>{{ obj.usuario }}</b></p>
+        <p>Matrícula: <b>{{ obj.usuario.matricula }}</b></p>
+
+    <p>Itens emprestados:</p>
+        <ul>
+            {% for item in obj.item.all %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ul><br>
+
+    <p><b>Data de empréstimo:</b> {{ data_emp }}<br />
+    <b>Funcionário responsável:</b> {{ obj.funcionario_emprestimo.first_name }} {{ obj.funcionario_emprestimo.last_name }}</p><br />
+    
+    <p><b>Prazo para devolução:</b> {{ prazo_dev }}</p><br />
+    
+    <p><b>Data de devolução:</b> {{ data_dev }}<br />
+    <b>Funcionário responsável:</b> {{ obj.funcionario_devolucao.first_name }} {{ obj.funcionario_devolucao.last_name }}</p><b>
+
+
+
+{% endblock %}

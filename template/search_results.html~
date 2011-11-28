@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+     <a href="../">{% trans "Home" %}</a> &rsaquo;
+     {% trans 'Resultado da Busca' %}
+</div>
+{% endblock %}
+
+{% block content %}
+
+<p>Você procurou por: <strong>{{ query }}</strong></p>
+
+
+<p>Encontrados {{ emprestimos|length }} empréstimo{{ emprestimos|pluralize }}.</p>
+<ul>
+    {% for obj in emprestimos %}
+        <li><a href ="../emprestimo/emprestimo/{{ obj }}" class="viewsitelink">Empréstimo ID: <b>{{ obj }}</b></a> - {{ obj.usuario }}</li>
+    {% endfor %}
+</ul>
+
+<p><a href="../buscador/" class="viewsitelink">Nova busca</a></p>
+
+{% endblock %}

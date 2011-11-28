@@ -1,0 +1,63 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+     <a href="../../../">{% trans "Home" %}</a> &rsaquo;
+     <a href="../">{{ app_label|capfirst }}</a> &rsaquo;
+     <a href="./">{{ opts.verbose_name_plural|capfirst }}</a> &rsaquo;
+     {% trans 'Termo de Responsabilidade' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div style="float:left; width: 50%; padding-right:20px">
+    <p>{% blocktrans %}<b>Empréstimo de Equipamentos</b>{% endblocktrans %}</p>
+    <p>{% blocktrans %}Termo de Responsabilidade{% endblocktrans %}</p>
+        <p>1ª via - <b>NUATE</b></p><br>
+        <p>Usuário: <b>{{ obj.usuario }}</b></p>
+        <p>Matrícula: <b>{{ obj.usuario.matricula }}</b></p>
+        <p>Data: {{ data_emp }}</p><br>
+
+    <p>Itens:</p>
+        <ul>
+            {% for item in obj.item.all %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ul><br>
+
+    <p>Prazo para devolução: <b>{{ prazo_dev }}</b></p><br>
+
+    <p>Assinatura: ___________________________________</p>
+    <p>Funcionário responsável: <b>{{ obj.funcionario_emprestimo.first_name }} {{ obj.funcionario_emprestimo.last_name }}</b></p>
+    <p>------------------------</p><br>
+    
+    <p><b>Data de devolução:</b> ____/____/2011 às ____:____</p>
+    <p>Funcionário: ___________________________________</p><br><br>
+</div>
+
+<div style="float:left; width: 45%; ">
+    <p>{% blocktrans %}<b>Empréstimo de Equipamentos</b>{% endblocktrans %}</p>
+    <p>{% blocktrans %}Termo de Responsabilidade{% endblocktrans %}</p>
+        <p>2ª via - <b>Usuário</b></p><br>
+        <p>Usuário: <b>{{ obj.usuario }}</b></p>
+        <p>Matrícula: <b>{{ obj.usuario.matricula }}</b></p>
+        <p>Data: {{ data_emp }}</p><br>
+
+    <p>Itens:</p>
+        <ul>
+            {% for item in obj.item.all %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ul><br>
+
+    <p>Prazo para devolução: <b>{{ prazo_dev }}</b></p><br>
+
+    <p>Assinatura: ___________________________________</p>
+    <p>Funcionário responsável: {{ obj.funcionario_emprestimo.first_name }} {{ obj.funcionario_emprestimo.last_name }}</p>
+    <p>------------------------</p><br>
+    
+    <p><b>Data de devolução:</b> ____/____/2011 às ____:____</p>
+    <p>Funcionário: ___________________________________</p><br><br>
+</div>
+{% endblock %}

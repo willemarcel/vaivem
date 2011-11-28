@@ -1,0 +1,19 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+     <a href="../vaivem/">{% trans "Home" %}</a> &rsaquo;
+     {% trans 'VaiVem - Home' %}
+</div>
+{% endblock %}
+
+{% block content %}
+    <p>{% blocktrans %}<h1>Bem vindo ao VaiVem</h1>{% endblocktrans %}</p><br><br>
+
+
+    <p>{% blocktrans %}<h3><a href="admin/">Interface de Administração</a></h3>{% endblocktrans %}</p>
+    <p>{% blocktrans %}<h3><a href="comprovante/emprestimo/">Comprovante de Empréstimo</h3>{% endblocktrans %}</p>
+
+
+{% endblock %}
