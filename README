@@ -1,0 +1,20 @@
+VaiVem
+
+VaiVem é um sistema de empréstimo desenvolvido com o framework web Django. Ele foi configurado para o empréstimo de equipamentos em uma universidade, porém pode ser facilmente adaptado para uso com DVD’s, CD’s e até mesmo livros de uma pequena biblioteca.
+
+VaiVem is a loans control system, developed with Django web framework. It is configured to loan of equipments in a University, but it can be easily adapted to use with DVD’s, CD’s or books.
+
+
+REQUIREMENTS
+
+- Django>=1.2
+
+
+INSTALL
+
+- Enter in the vaivem directory and execute these commands:
+
+python manage.py syncdb
+python manage.py runserver
+
+- Access http://127.0.0.1:8000/vaivem to use VaiVem
