@@ -33,6 +33,15 @@ class UsuarioAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':40})},
     }
+    actions = ['listar_emprestimos']
+
+    def listar_emprestimos(modeladmin, request, queryset):
+        if len(queryset) > 1:
+            messages.error(request, 'Erro! Selecione apenas um usuario de cada vez')
+        else:
+            return HttpResponseRedirect("/vaivem/admin/procura/?q=%s&search_by=usuario&devolvido=not_matters" % queryset[0].matricula)
+
+    listar_emprestimos.short_description = "Listar emprestimos"
 
 
 class EquipamentoAdmin(admin.ModelAdmin):
