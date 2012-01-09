@@ -19,7 +19,7 @@ from django.db import models
 from django.middleware import csrf
 from django.shortcuts import render_to_response
 from django import template
-from django.http import HttpResponseRedirect 
+from django.http import HttpResponseRedirect
 from django.contrib.admin import helpers
 from django.contrib import messages
 from django.contrib.auth.models import User, check_password
@@ -43,21 +43,28 @@ class EquipamentoAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs = {'rows':3, 'cols':40})},
     }
-    actions = ['naodisponivel', 'tornardisponivel']
+    actions = ['nao_disponivel', 'tornar_disponivel', 'listar_emprestimos']
 
+    def listar_emprestimos(modeladmin, request, queryset):
+        if len(queryset) > 1:
+            messages.error(request, 'Erro! Selecione apenas um equipamento de cada vez')
+        else:
+            return HttpResponseRedirect("/vaivem/admin/procura/?q=%s&search_by=equipamento&devolvido=not_matters" % queryset[0].tombo)
+
+    listar_emprestimos.short_description = "Listar emprestimos"
 
 # modify the status of the equipment to disponible = True 
 # action que altera status do equipamento para disponivel = False
-    def naodisponivel(modeladmin, request, queryset):
+    def nao_disponivel(modeladmin, request, queryset):
         for equipo in queryset:
             Equipamento.objects.filter(tombo = equipo.tombo).update(disponivel = False)
             modeladmin.message_user(request, "Equipamento marcado como Indisponivel")
 
-    naodisponivel.short_description = "Marcar equipamento como indisponivel"
+    nao_disponivel.short_description = "Marcar como Indisponivel"
 
 # modify the status of the equipment to disponible only if it's not loan 
 # action que altera status do equipamento para disponivel = True, caso ele nao esteja emprestado
-    def tornardisponivel(modeladmin, request, queryset):
+    def tornar_disponivel(modeladmin, request, queryset):
         if len(Emprestimo.objects.filter(item__in = queryset).filter(devolvido = False)) > 0:
             if len(queryset) > 1:
                 messages.error(request, 'Erro! Alguns dos equipamentos encontram-se emprestados')
@@ -68,7 +75,7 @@ class EquipamentoAdmin(admin.ModelAdmin):
                 Equipamento.objects.filter(tombo = equipo.tombo).update(disponivel=True)
                 modeladmin.message_user(request, "Equipamento marcado como disponivel")
 
-    tornardisponivel.short_description = "Marcar equipamento como Disponivel"
+    tornar_disponivel.short_description = "Marcar como Disponivel"
 
 
 class EmprestimoAdmin(admin.ModelAdmin):
