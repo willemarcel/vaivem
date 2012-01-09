@@ -35,6 +35,8 @@ class UsuarioAdmin(admin.ModelAdmin):
     }
     actions = ['listar_emprestimos']
 
+#action that lists loans of a user
+#action que lista empréstimos de um usuario
     def listar_emprestimos(modeladmin, request, queryset):
         if len(queryset) > 1:
             messages.error(request, 'Erro! Selecione apenas um usuario de cada vez')
@@ -54,6 +56,8 @@ class EquipamentoAdmin(admin.ModelAdmin):
     }
     actions = ['nao_disponivel', 'tornar_disponivel', 'listar_emprestimos']
 
+# list loans of a equipament
+# lista emprestimos de um equipamento
     def listar_emprestimos(modeladmin, request, queryset):
         if len(queryset) > 1:
             messages.error(request, 'Erro! Selecione apenas um equipamento de cada vez')
@@ -135,7 +139,7 @@ class EmprestimoAdmin(admin.ModelAdmin):
     devolucao.short_description = "Marcar emprestimo como devolvido"
 
 
-    #saves emprestimos and change status of usuario and equipamentos
+    #saves loan and change status of users and equipaments
     # Salva os emprestimos e modifica o status do usuario e equipamentos
     def save_model(self, request, obj, form, change):
         obj.funcionario_emprestimo = request.user
