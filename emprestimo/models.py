@@ -55,6 +55,7 @@ class Equipamento(models.Model):
         ('video', 'Vídeo'),
         ('foto', 'Fotografia'),
         ('info', 'Informática'),
+        ('museu', 'Museologia')
     )
     tombo = models.IntegerField(max_length=10, primary_key=True)
     nome = models.CharField(max_length=200)
