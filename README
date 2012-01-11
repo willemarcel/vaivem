@@ -8,9 +8,13 @@ VaiVem is a loans control system, developed with Django web framework. It is con
 REQUIREMENTS
 
 - Django>=1.2
+- South
 
 
 INSTALL
+
+- If you don't have South installed, see the instructions at http://south.aeracode.org/docs/installation.html
+
 
 - Enter in the vaivem directory and execute these commands:
 

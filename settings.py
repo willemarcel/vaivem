@@ -84,6 +84,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'vaivem.emprestimo',
+    # comment the next line if you don't want to use South
+    'south',
 )
 
 FORCE_SCRIPT_NAME = ''
