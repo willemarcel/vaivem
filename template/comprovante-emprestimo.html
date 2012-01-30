@@ -13,7 +13,7 @@
 {% block content %}
 <div style="float:left; width: 50%; padding-right:20px">
     <p>{% blocktrans %}<b>Empréstimo de Equipamentos</b>{% endblocktrans %}</p>
-    <p>{% blocktrans %}Termo de Responsabilidade{% endblocktrans %}</p>
+    <p>{% blocktrans %}Termo de Responsabilidade - <b>Nº {{ obj }}</b> {% endblocktrans %}</p>
         <p>1ª via - <b>NUATE - CAHL</b></p><br>
         <p>Usuário: <b>{{ obj.usuario }}</b><br>
         Matrícula: <b>{{ obj.usuario.matricula }}</b></p>
@@ -38,7 +38,7 @@
 
 <div style="float:left; width: 45%; ">
     <p>{% blocktrans %}<b>Empréstimo de Equipamentos</b>{% endblocktrans %}</p>
-    <p>{% blocktrans %}Termo de Responsabilidade{% endblocktrans %}</p>
+    <p>{% blocktrans %}Termo de Responsabilidade - <b>Nº {{ obj }}</b> {% endblocktrans %}</p>
         <p>2ª via - <b>Usuário</b></p><br>
         <p>Usuário: <b>{{ obj.usuario }}</b><br>
         Matrícula: <b>{{ obj.usuario.matricula }}</b></p>
