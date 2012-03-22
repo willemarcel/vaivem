@@ -61,12 +61,12 @@ def search(request):
         
         if request.GET['search_by'] == "equipamento":
             try:
-                emps = Equipamento.objects.get(tombo=q).emprestimo_set.all()
+                emps = Equipamento.objects.get(tombo=q).emprestimo_set.order_by('-id')
             except ObjectDoesNotExist:
                 emps = []
         else:
             try:
-                emps = Usuario.objects.get(matricula=q).emprestimo_set.all()
+                emps = Usuario.objects.get(matricula=q).emprestimo_set.order_by('-id')
             except ObjectDoesNotExist:
                 emps = []
 
