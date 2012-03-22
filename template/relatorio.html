@@ -12,6 +12,7 @@
 
 {% block content %}
     <p>{% blocktrans %}<b>Relatório de Empréstimo de Equipamentos</b>{% endblocktrans %}</p><br>
+    <p>{% blocktrans %}Empréstimo Nº: <b>{{ obj }}</b>{% endblocktrans %}</p><br>
         <p>Usuário: <b>{{ obj.usuario }}</b></p>
         <p>Matrícula: <b>{{ obj.usuario.matricula }}</b></p>
 
