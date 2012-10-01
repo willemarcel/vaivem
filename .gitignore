@@ -1,0 +1,6 @@
+.scrapy
+*.pyc
+*.db
+*.DS_Store
+*.swp
+*~
