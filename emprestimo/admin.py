@@ -116,13 +116,19 @@ class EmprestimoAdmin(admin.ModelAdmin):
                 # calcula e aplica multas, se a devolução for realizada com atraso
                 for emp in queryset:
                     atraso = emp.data_devolucao - emp.prazo_devolucao
-                    if atraso > datetime.timedelta(minutes=15):
-                        if atraso < datetime.timedelta(hours=8):
+                    if atraso > datetime.timedelta(minutes=60):
+                        if atraso < datetime.timedelta(hours=2):
+                            multa = datetime.datetime.now() + datetime.timedelta(1)
+                        elif atraso < datetime.timedelta(hours=3):
                             multa = datetime.datetime.now() + datetime.timedelta(2)
-                        elif atraso < datetime.timedelta(hours=12):
-                            multa = datetime.datetime.now() + datetime.timedelta(4)
+                        elif atraso < datetime.timedelta(hours=4):
+                            multa = datetime.datetime.now() + datetime.timedelta(3)
                         elif atraso < datetime.timedelta(hours=24):
-                            multa = datetime.datetime.now() + datetime.timedelta(10)
+                            multa = datetime.datetime.now() + datetime.timedelta(5)
+                        elif atraso < datetime.timedelta(hours=48):
+                            multa = datetime.datetime.now() + datetime.timedelta(7)
+                        elif atraso < datetime.timedelta(hours=72):
+                            multa = datetime.datetime.now() + datetime.timedelta(15)
                         else:
                             multa = datetime.datetime.now() + datetime.timedelta(30)
                         Usuario.objects.filter(emprestimo = emp).update(suspensao = multa.date() , disponivel=True)
