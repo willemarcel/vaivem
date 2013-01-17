@@ -10,7 +10,7 @@
 
 
 from django.conf.urls.defaults import *
-from vaivem.emprestimo.views import emprestimosindex, comprovanteemprestimo, relatorio, search_form, search, page404
+from vaivem.emprestimo.views import emprestimosindex, comprovanteemprestimo, relatorio, search_form, search, stats, page404
 
 handler404 = page404
 # Uncomment the next two lines to enable the admin:
@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     (r'^vaivem/admin/emprestimo/emprestimo/(?P<emprestimo_id>\d+)/$', relatorio),
     (r'^vaivem/admin/buscador/$', search_form),
     (r'^vaivem/admin/procura/$', search),
+    (r'^vaivem/admin/stats/$', stats),
 # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),

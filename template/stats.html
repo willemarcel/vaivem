@@ -1,0 +1,65 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+	     <a href="../">{% trans "Home" %}</a> &rsaquo;
+	     {% trans 'Estatísticas de empréstimos' %}
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    {% if years %}
+
+        <h3>Estatísticas por ano</h3>
+
+            <form action="/vaivem/admin/stats/" method="get">
+                <select id="year" name="year">
+                    {% for year in years %}
+                        <option value="{{ year.year }}">{{ year.year }}</option>
+                    {% endfor %}
+                </select>
+                <input class="submit" type="submit" value="Search">
+            </form>
+
+        <h3>Estatísticas por mês</h3>
+
+            <form action="/vaivem/admin/stats/" method="get">
+                <select id="year" name="year">
+                    {% for year in years %}
+                        <option value="{{ year.year }}">{{ year.year }}</option>
+                    {% endfor %}
+                </select>
+
+                <input name="month" type="number" value="1" max="12" min="1" step="1">
+
+                <input class="submit" type="submit" value="Search">
+            </form>
+
+    {% endif %}
+
+
+    {% if year %}
+
+        <table>
+	        <thead>
+	            <tr>
+	                <th>Mês</th>
+	                <th>Empréstimos</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+        {% for date, x in results %}
+	            <tr>
+	                <th>{{ date.month }}</th>
+	                <th>{{ x }}</th>
+	            </tr>
+        {% endfor %}
+	        <tbody>
+        </table>
+
+    {% endif %}
+
+
+{% endblock %}

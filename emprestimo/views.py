@@ -14,6 +14,7 @@ from django.shortcuts import render_to_response
 import datetime
 from vaivem.emprestimo.models import Equipamento, Emprestimo, Usuario
 from django.core.exceptions import ObjectDoesNotExist
+import qsstats
 
 
 def index(request):
@@ -78,6 +79,27 @@ def search(request):
         return render_to_response('search_results.html', {'emprestimos': emps, 'query': q})
     else:
         return render_to_response('search_form.html', {'error': True})
+
+
+def stats(request):
+
+    if 'year' in request.GET and request.GET['year']:
+        year = int(request.GET['year'])
+
+        if 'month' in request.GET and request.GET['month']:
+            month = request.GET['month']
+            qs = Emprestimo.objects.filter(data_emprestimo__year=year, data_emprestimo__month=month)
+
+        else:
+            qs = Emprestimo.objects.all()
+            qss = qsstats.QuerySetStats(qs, 'data_emprestimo')
+            results = qss.time_series(datetime.date(year, 1,1), datetime.date(year, 12, 31), 'months')
+
+            return render_to_response('stats.html', {'year': year, 'results': results})
+
+    else:
+        years = Emprestimo.objects.all().dates("data_emprestimo", "year")
+        return render_to_response('stats.html', {'years': years})  
 
 def page404(request):
     return render_to_response('404.html')
