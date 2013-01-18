@@ -15,6 +15,7 @@ import datetime
 from vaivem.emprestimo.models import Equipamento, Emprestimo, Usuario
 from django.core.exceptions import ObjectDoesNotExist
 import qsstats
+from django.db.models import F
 
 
 def index(request):
@@ -91,11 +92,20 @@ def stats(request):
             qs = Emprestimo.objects.filter(data_emprestimo__year=year, data_emprestimo__month=month)
 
         else:
+            # number of loans of a year by month
             qs = Emprestimo.objects.all()
             qss = qsstats.QuerySetStats(qs, 'data_emprestimo')
-            results = qss.time_series(datetime.date(year, 1,1), datetime.date(year, 12, 31), 'months')
+            qss_bymonth = qss.time_series(datetime.date(year, 1,1), datetime.date(year, 12, 31), 'months')
+            months = [i[0].strftime("%b") for i in qss_bymonth]
+            number_emps= [i[1] for i in qss_bymonth]
 
-            return render_to_response('stats.html', {'year': year, 'results': results})
+            # number of loans returned without delay
+            qs2 = Emprestimo.objects.filter(devolvido=True).filter(prazo_devolucao__lt=F('data_devolucao'))
+            qss2 = qsstats.QuerySetStats(qs2, 'data_emprestimo')
+            qss2_bymonth = qss2.time_series(datetime.date(year, 1,1), datetime.date(year, 12, 31), 'months')
+            no_delayed = [i[1] for i in qss2_bymonth]
+
+            return render_to_response('stats.html', {'year': year, 'results': zip(months, number_emps, no_delayed)})
 
     else:
         years = Emprestimo.objects.all().dates("data_emprestimo", "year")

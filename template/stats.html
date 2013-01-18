@@ -42,22 +42,27 @@
 
     {% if year %}
 
-        <table>
-	        <thead>
-	            <tr>
-	                <th>Mês</th>
-	                <th>Empréstimos</th>
-	            </tr>
-	        </thead>
-	        <tbody>
-        {% for date, x in results %}
-	            <tr>
-	                <th>{{ date.month }}</th>
-	                <th>{{ x }}</th>
-	            </tr>
-        {% endfor %}
-	        <tbody>
-        </table>
+        {% load googlecharts %}
+        {# container #}
+        <div id="out"></div>
+        {% googlecharts %}
+
+            {% data results "out_data" %}
+                {% col "string" "Mês" %}"{{ val }}"{% endcol %}
+                {% col "number" "Número de Empréstimos" %}{{ val }}{% endcol %}
+                {% col "number" "Devolvidos dentro do prazo" %}{{ val }}{% endcol %}
+            {% enddata %}
+
+            {% options "out_options" %}
+                kind: "LineChart",
+                options: {
+                    width: 600,
+                    height: 240
+                }
+            {% endoptions %}
+            {# chart is assembled from container, data and options #}
+            {% graph "out" "out_data" "out_options" %}
+        {% endgooglecharts %}
 
     {% endif %}
 

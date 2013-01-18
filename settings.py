@@ -116,6 +116,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'vaivem.emprestimo',
+    'googlecharts',
 )
 
 FORCE_SCRIPT_NAME = ''
