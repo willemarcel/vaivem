@@ -1,0 +1,39 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+	     <a href="../">{% trans "Home" %}</a> &rsaquo;
+	     {% trans 'Estatísticas de empréstimos' %}
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <h2>Estatísticas do mês {{ month }} / {{ year }}</h2>
+
+    <h3>{{ total_month }} empréstimos realizados</h3>
+
+    {% load googlecharts %}
+    {# container #}
+    <div id="out"></div>
+    {% googlecharts %}
+
+        {% data results "out_data" %}
+            {% col "string" "Dado" %}"{{ val }}"{% endcol %}
+            {% col "number" "Quantidade de empréstimos" %}{{ val }}{% endcol %}
+        {% enddata %}
+
+        {% options "out_options" %}
+            kind: "PieChart",
+            options: {
+                title: 'Empréstimos por mês',
+                width: 300,
+                height: 300
+            }
+        {% endoptions %}
+        {# chart is assembled from container, data and options #}
+        {% graph "out" "out_data" "out_options" %}
+    {% endgooglecharts %}
+
+{% endblock %}

@@ -42,6 +42,10 @@
 
     {% if year %}
 
+        <h2>Estatísticas do ano de 2012</h2>
+
+        <h3>{{ total_year }} empréstimos realizados</h3>
+
         {% load googlecharts %}
         {# container #}
         <div id="out"></div>
@@ -51,12 +55,14 @@
                 {% col "string" "Mês" %}"{{ val }}"{% endcol %}
                 {% col "number" "Número de Empréstimos" %}{{ val }}{% endcol %}
                 {% col "number" "Devolvidos dentro do prazo" %}{{ val }}{% endcol %}
+                {% col "number" "Devolvidos com atraso" %}{{ val }}{% endcol %}
             {% enddata %}
 
             {% options "out_options" %}
-                kind: "LineChart",
+                kind: "ColumnChart",
                 options: {
-                    width: 600,
+                    title: 'Empréstimos por mês',
+                    width: 700,
                     height: 240
                 }
             {% endoptions %}
