@@ -17,6 +17,8 @@
     {% load googlecharts %}
     {# container #}
     <div id="out"></div>
+    <div id="out2"></div>
+    <div id="out3"></div>
     {% googlecharts %}
 
         {% data results "out_data" %}
@@ -24,16 +26,50 @@
             {% col "number" "Quantidade de empréstimos" %}{{ val }}{% endcol %}
         {% enddata %}
 
+        {% data top_equipos "out_data2" %}
+            {% col "string" "Nome" %}"{{ val }}"{% endcol %}
+            {% col "number" "Quantidade de empréstimos" %}{{ val }}{% endcol %}
+        {% enddata %}
+
+        {% data top_users "out_data3" %}
+            {% col "string" "Nome" %}"{{ val }}"{% endcol %}
+            {% col "number" "Quantidade de empréstimos" %}{{ val }}{% endcol %}
+        {% enddata %}
+
         {% options "out_options" %}
             kind: "PieChart",
             options: {
-                title: 'Empréstimos por mês',
-                width: 300,
-                height: 300
+                title: 'Situação dos empréstimos',
+                width: 400,
+                height: 400
             }
         {% endoptions %}
+
+        {% options "out_options2" %}
+            kind: "BarChart",
+            options: {
+                title: 'Equipamentos mais emprestados',
+                width: 600,
+                height: 400
+            }
+        {% endoptions %}
+
+        {% options "out_options3" %}
+            kind: "BarChart",
+            options: {
+                title: 'Usuários mais ativos',
+                width: 600,
+                height: 400
+            }
+        {% endoptions %}
+
         {# chart is assembled from container, data and options #}
+
         {% graph "out" "out_data" "out_options" %}
+        {% graph "out2" "out_data2" "out_options2" %}
+        {% graph "out3" "out_data3" "out_options3" %}
+
     {% endgooglecharts %}
+
 
 {% endblock %}

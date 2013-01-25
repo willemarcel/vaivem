@@ -15,7 +15,7 @@ import datetime
 from vaivem.emprestimo.models import Equipamento, Emprestimo, Usuario
 from django.core.exceptions import ObjectDoesNotExist
 import qsstats
-from django.db.models import F
+from django.db.models import F, Count
 
 
 def index(request):
@@ -91,9 +91,17 @@ def stats(request):
             month = request.GET['month']
             qs = Emprestimo.objects.filter(data_emprestimo__year=year, data_emprestimo__month=month)
 
-            results = [('Devolvidos com atraso', qs.filter(devolvido=True).filter(prazo_devolucao__lt=F('data_devolucao')).count()), ('Devolvidos no prazo', qs.filter(devolvido=True).filter(prazo_devolucao__gt=F('data_devolucao')).count()), ('Não devolvidos', qs.filter(devolvido=False).count())]
+            results = [('Devolvidos com atraso', qs.filter(devolvido=True, prazo_devolucao__lt=F('data_devolucao')).count()), \
+                ('Devolvidos no prazo', qs.filter(devolvido=True, prazo_devolucao__gt=F('data_devolucao')).count()), \
+                ('Não devolvidos', qs.filter(devolvido=False).count())]
 
-            return render_to_response('stats-by-month.html', {'year': year, 'month': month, 'results': results, 'total_month': qs.count()})
+            top_equipos = Equipamento.objects.filter(emprestimo__data_emprestimo__year=year, emprestimo__data_emprestimo__month=month).values('nome').annotate(num_emp=Count('emprestimo')).order_by('-num_emp')[:15]
+            top_equipos_list = zip([i['nome'] for i in top_equipos], [i['num_emp'] for i in top_equipos])
+
+            top_users = Usuario.objects.filter(emprestimo__data_emprestimo__year=year, emprestimo__data_emprestimo__month=month).annotate(num_emp=Count('emprestimo')).order_by('-num_emp')[:15]
+            top_users_list = zip([i.nome for i in top_users], [i.num_emp for i in top_users])
+
+            return render_to_response('stats-by-month.html', {'year': year, 'month': month, 'results': results, 'total_month': qs.count(), 'top_equipos': top_equipos_list, 'top_users': top_users_list})
 
         else:
             # number of loans of a year by month
@@ -104,13 +112,13 @@ def stats(request):
             number_loans = [i[1] for i in qss_bymonth]
 
             # number of loans returned without delay
-            qs2 = Emprestimo.objects.filter(data_emprestimo__year=year).filter(devolvido=True).filter(prazo_devolucao__lt=F('data_devolucao'))
+            qs2 = Emprestimo.objects.filter(data_emprestimo__year=year, devolvido=True, prazo_devolucao__lt=F('data_devolucao'))
             qss2 = qsstats.QuerySetStats(qs2, 'data_emprestimo')
             qss2_bymonth = qss2.time_series(datetime.date(year, 1,1), datetime.date(year, 12, 31), 'months')
             no_delayed = [i[1] for i in qss2_bymonth]
 
             # number of loans returned with delay
-            qs3 = Emprestimo.objects.filter(data_emprestimo__year=year).filter(devolvido=True).filter(prazo_devolucao__gt=F('data_devolucao'))
+            qs3 = Emprestimo.objects.filter(data_emprestimo__year=year, devolvido=True, prazo_devolucao__gt=F('data_devolucao'))
             qss3 = qsstats.QuerySetStats(qs3, 'data_emprestimo')
             qss3_bymonth = qss3.time_series(datetime.date(year, 1,1), datetime.date(year, 12, 31), 'months')
             delayed = [i[1] for i in qss3_bymonth]
