@@ -91,9 +91,9 @@ def stats(request):
             month = request.GET['month']
             qs = Emprestimo.objects.filter(data_emprestimo__year=year, data_emprestimo__month=month)
 
-            results = [('Devolvidos com atraso', qs.filter(devolvido=True, prazo_devolucao__lt=F('data_devolucao')).count()), \
-                ('Devolvidos no prazo', qs.filter(devolvido=True, prazo_devolucao__gt=F('data_devolucao')).count()), \
-                ('Não devolvidos', qs.filter(devolvido=False).count())]
+            results = [('Devolvidos com atraso', qs.filter(devolvido=True, prazo_devolucao__lt=F('data_devolucao')).count()), 
+                        ('Devolvidos no prazo', qs.filter(devolvido=True, prazo_devolucao__gt=F('data_devolucao')).count()), 
+                        ('Não devolvidos', qs.filter(devolvido=False).count())]
 
             top_equipos = Equipamento.objects.filter(emprestimo__data_emprestimo__year=year, emprestimo__data_emprestimo__month=month).values('nome').annotate(num_emp=Count('emprestimo')).order_by('-num_emp')[:15]
             top_equipos_list = zip([i['nome'] for i in top_equipos], [i['num_emp'] for i in top_equipos])
