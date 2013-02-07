@@ -16,7 +16,7 @@
 
             <form action="/vaivem/admin/stats/" method="get">
                 <select id="year" name="year">
-                    {% for year in years %}
+                    {% for year in years reversed %}
                         <option value="{{ year.year }}">{{ year.year }}</option>
                     {% endfor %}
                 </select>
@@ -27,7 +27,7 @@
 
             <form action="/vaivem/admin/stats/" method="get">
                 <select id="year" name="year">
-                    {% for year in years %}
+                    {% for year in years reversed %}
                         <option value="{{ year.year }}">{{ year.year }}</option>
                     {% endfor %}
                 </select>
