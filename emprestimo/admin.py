@@ -9,10 +9,8 @@
 #  Software Foundation. See the file README for copying conditions.
 #
 
-from vaivem.emprestimo.models import Usuario
-from vaivem.emprestimo.models import Equipamento
-from vaivem.emprestimo.models import Emprestimo
-from django.contrib import admin
+from vaivem.emprestimo.models import Usuario, Equipamento, Emprestimo
+from django.contrib import admin, messages
 import datetime
 from django.forms import Textarea
 from django.db import models
@@ -21,7 +19,6 @@ from django.shortcuts import render_to_response
 from django import template
 from django.http import HttpResponseRedirect
 from django.contrib.admin import helpers
-from django.contrib import messages
 from django.contrib.auth.models import User, check_password
 
 
@@ -96,7 +93,7 @@ class EmprestimoAdmin(admin.ModelAdmin):
     filter_horizontal = ('item',)
     list_display = ('id', 'usuario', 'prazo_devolucao', 'devolvido')
     list_filter = ['devolvido', 'data_emprestimo', 'prazo_devolucao', 'data_devolucao']
-    actions = ['devolucao']
+    actions = ['devolucao', 'comprovante_emprestimo']
 
 
 # itens handover process
@@ -143,6 +140,15 @@ class EmprestimoAdmin(admin.ModelAdmin):
             return render_to_response('devolucao.html', {'itens': Equipamento.objects.filter(emprestimo__in = queryset), 'queryset': queryset, 'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME, 'csrf_token': csrf.get_token(request)})
 
     devolucao.short_description = "Marcar emprestimo como devolvido"
+
+# mostrar comprovante de empréstimo
+    def comprovante_emprestimo(modeladmin, request, queryset):
+        if len(queryset) > 1:
+            messages.error(request, 'Erro! Selecione apenas um empréstimo de cada vez')
+        else:
+            return HttpResponseRedirect("/vaivem/admin/comprovante/emprestimo/%s" % queryset[0].id)
+
+    comprovante_emprestimo.short_description = "Abrir comprovante de empréstimo"
 
 
     #saves loan and change status of users and equipaments

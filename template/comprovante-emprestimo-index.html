@@ -10,7 +10,7 @@
 
 {% block content %}
     <p>{% blocktrans %}Selecione o empréstimo que deseja visualizar:{% endblocktrans %}</p>
-    {% for obj in emps reversed %}
+    {% for obj in emps %}
         <ul>{{ obj.data_emprestimo.date }} - ID: <a href ="{{ obj }}" class="viewsitelink">{{ obj }} / {{ obj.usuario }}</a></ul>
     {% endfor %}
 

@@ -22,13 +22,13 @@ def index(request):
     return HttpResponseRedirect('/vaivem/admin/')
 
 
-# lista os empréstimos com link para o termo de empréstimo
+# lista os empréstimos com link para o termo de responsabilidade
 def emprestimosindex(request):
-    emps = Emprestimo.objects.filter(devolvido=False)
+    emps = Emprestimo.objects.filter(devolvido=False).order_by('-id')
     return render_to_response('comprovante-emprestimo-index.html', {'emps': emps})
 
 
-# gera os termos de responsabilidade dos empréstimos
+# gera os comprovantes (termos de responsabilidade) dos empréstimos
 def comprovanteemprestimo(request, emprestimo_id):
     obj = Emprestimo.objects.get(id=emprestimo_id)
     data_emp = obj.data_emprestimo.strftime("%d/%m/%Y - %H:%M")
