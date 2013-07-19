@@ -14,7 +14,7 @@
 
         <h3>Estatísticas por ano</h3>
 
-            <form action="/vaivem/admin/stats/" method="get">
+            <form action="/admin/stats/" method="get">
                 <select id="year" name="year">
                     {% for year in years reversed %}
                         <option value="{{ year.year }}">{{ year.year }}</option>
@@ -25,7 +25,7 @@
 
         <h3>Estatísticas por mês</h3>
 
-            <form action="/vaivem/admin/stats/" method="get">
+            <form action="/admin/stats/" method="get">
                 <select id="year" name="year">
                     {% for year in years reversed %}
                         <option value="{{ year.year }}">{{ year.year }}</option>
