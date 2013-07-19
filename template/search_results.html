@@ -16,7 +16,7 @@
 <p>Encontrados {{ emprestimos|length }} empréstimo{{ emprestimos|pluralize }}.</p>
 <ul>
     {% for obj in emprestimos %}
-        <li><a href ="../emprestimo/emprestimo/{{ obj }}" class="viewsitelink">Empréstimo ID: <b>{{ obj }}</b></a> - <b>{{ obj.usuario }}</b> / De: {{ obj.data_emprestimo }} - Até: {{ obj.data_devolucao }}</li>
+        <li><a href ="../emprestimo/emprestimo/{{ obj }}" class="viewsitelink">Empréstimo ID: <b>{{ obj }}</b></a> - <b>{{ obj.usuario }}</b> / De: {{ obj.data_emprestimo|date:"d M Y - H:i" }} - Até: {{ obj.data_devolucao|date:"d M Y - H:i" }}</li>
     {% endfor %}
 </ul>
 <br />
