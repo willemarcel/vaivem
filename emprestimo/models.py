@@ -63,13 +63,14 @@ class Equipamento(models.Model):
     categoria = models.CharField(max_length=50, choices=CATEG_EQUIPOS)
     disponivel = models.BooleanField(default=True)
     observacoes = models.TextField('Observações', max_length=300, blank=True)
+    ultimo_inventario = models.DateField('Inventariado em', null=True)
     def __unicode__(self):
         return u'%s - %s' % (self.tombo, self.nome)
 
 
 class Emprestimo(models.Model):
     id = models.AutoField(primary_key=True)
-    item = models.ManyToManyField('Equipamento', limit_choices_to = {'disponivel':True})
+    itens = models.ManyToManyField('Equipamento', limit_choices_to = {'disponivel':True})
     usuario = models.ForeignKey('Usuario', limit_choices_to = {'disponivel':True, 'suspensao__lte':datetime.date.today()})
     data_emprestimo = models.DateTimeField('Data de Empréstimo', auto_now_add=True)
     prazo_devolucao = models.DateTimeField('Prazo para Devolução', null=True)
@@ -79,4 +80,5 @@ class Emprestimo(models.Model):
     funcionario_devolucao = models.ForeignKey(User, related_name="%(class)s_devolucao", null=True)
     def __unicode__(self):
         return str(self.id)
+
 

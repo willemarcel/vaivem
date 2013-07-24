@@ -45,13 +45,13 @@ class UsuarioAdmin(admin.ModelAdmin):
 
 class EquipamentoAdmin(admin.ModelAdmin):
     fields = ['tombo', 'nome', 'numeroserie', 'categoria', 'observacoes']
-    list_display = ('tombo', 'nome',  'numeroserie', 'categoria', 'disponivel', 'observacoes')
-    list_filter = ['categoria', 'disponivel']
+    list_display = ('tombo', 'nome',  'numeroserie', 'categoria', 'disponivel', 'ultimo_inventario', 'observacoes')
+    list_filter = ['categoria', 'disponivel', 'ultimo_inventario']
     search_fields = ('nome', 'tombo', 'numeroserie')
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs = {'rows':3, 'cols':40})},
     }
-    actions = ['nao_disponivel', 'tornar_disponivel', 'listar_emprestimos']
+    actions = ['nao_disponivel', 'tornar_disponivel', 'listar_emprestimos', 'checar']
 
 # list loans of a equipament
 # lista emprestimos de um equipamento
@@ -75,7 +75,7 @@ class EquipamentoAdmin(admin.ModelAdmin):
 # modify the status of the equipment to disponible only if it's not loan 
 # action que altera status do equipamento para disponivel = True, caso ele nao esteja emprestado
     def tornar_disponivel(modeladmin, request, queryset):
-        if len(Emprestimo.objects.filter(item__in = queryset).filter(devolvido = False)) > 0:
+        if len(Emprestimo.objects.filter(itens__in = queryset).filter(devolvido = False)) > 0:
             if len(queryset) > 1:
                 messages.error(request, 'Erro! Alguns dos equipamentos encontram-se emprestados')
             else:
@@ -87,10 +87,19 @@ class EquipamentoAdmin(admin.ModelAdmin):
 
     tornar_disponivel.short_description = "Marcar como Disponivel"
 
+# modify the verification date of the equipments to today
+# action que altera data de inventário dos equipamentos para hoje
+    def inventariar(modeladmin, request, queryset):
+        for equipo in queryset:
+            Equipamento.objects.filter(tombo = equipo.tombo).update(ultimo_inventario=datetime.date.today())
+            modeladmin.message_user(request, "Data de inventário atualizada")
+
+    inventariar.short_description = "Atualizar data de inventário"
+
 
 class EmprestimoAdmin(admin.ModelAdmin):
-    fields = ['usuario', 'item', 'prazo_devolucao']
-    filter_horizontal = ('item',)
+    fields = ['usuario', 'itens', 'prazo_devolucao']
+    filter_horizontal = ('itens',)
     list_display = ('id', 'usuario', 'prazo_devolucao', 'devolvido')
     list_filter = ['devolvido', 'data_emprestimo', 'prazo_devolucao', 'data_devolucao']
     actions = ['devolucao', 'comprovante_emprestimo']
@@ -159,7 +168,7 @@ class EmprestimoAdmin(admin.ModelAdmin):
         m = form.save()
         m.usuario.disponivel = False
         m.usuario.save()
-        for i in m.item.all():
+        for i in m.itens.all():
             i.disponivel = False
             i.save()
 
