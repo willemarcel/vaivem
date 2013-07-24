@@ -16,19 +16,22 @@ from vaivem.emprestimo.models import Equipamento, Emprestimo, Usuario
 from django.core.exceptions import ObjectDoesNotExist
 import qsstats
 from django.db.models import F, Count
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
-    return HttpResponseRedirect('/vaivem/admin/')
+    return HttpResponseRedirect('/admin/')
 
 
 # lista os empréstimos com link para o termo de responsabilidade
+@login_required
 def emprestimosindex(request):
     emps = Emprestimo.objects.filter(devolvido=False).order_by('-id')
     return render_to_response('comprovante-emprestimo-index.html', {'emps': emps})
 
 
 # gera os comprovantes (termos de responsabilidade) dos empréstimos
+@login_required
 def comprovanteemprestimo(request, emprestimo_id):
     obj = Emprestimo.objects.get(id=emprestimo_id)
     data_emp = obj.data_emprestimo.strftime("%d/%m/%Y - %H:%M")
@@ -38,6 +41,7 @@ def comprovanteemprestimo(request, emprestimo_id):
 
 # generate the loans list
 # gera os relatórios de emprestimo
+@login_required
 def relatorio(request, emprestimo_id):
     obj = Emprestimo.objects.get(id=emprestimo_id)
     data_emp = obj.data_emprestimo.strftime("%d/%m/%Y - %H:%M")
@@ -51,12 +55,14 @@ def relatorio(request, emprestimo_id):
 
 # search forms of loans
 # formulário de busca de empréstimos
+@login_required
 def search_form(request):
     return render_to_response('search_form.html')
 
 
 # search results
 # resultados da busca
+@login_required
 def search(request):
     if 'q' in request.GET and request.GET['q']:
         q = request.GET['q']
@@ -81,7 +87,7 @@ def search(request):
     else:
         return render_to_response('search_form.html', {'error': True})
 
-
+@login_required
 def stats(request):
 
     if 'year' in request.GET and request.GET['year']:
