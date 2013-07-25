@@ -24,13 +24,13 @@ from django.contrib.auth.models import User, check_password
 
 class UsuarioAdmin(admin.ModelAdmin):
     fields = ['matricula', 'nome', 'categoria', 'email', 'telefone','endereco', 'observacoes']
-    list_display = ('nome', 'matricula', 'categoria', 'disponivel', 'suspensao', 'observacoes')
-    list_filter = ['categoria', 'disponivel']
+    list_display = ('nome', 'matricula', 'categoria', 'disponivel', 'suspensao', 'atualizacao_cadastral', 'observacoes')
+    list_filter = ['categoria', 'disponivel', 'atualizacao_cadastral']
     search_fields = ('nome', 'matricula')
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':40})},
     }
-    actions = ['listar_emprestimos']
+    actions = ['listar_emprestimos', 'atualizar_cadastro']
 
 #action that lists loans of a user
 #action que lista empréstimos de um usuario
@@ -38,9 +38,22 @@ class UsuarioAdmin(admin.ModelAdmin):
         if len(queryset) > 1:
             messages.error(request, 'Erro! Selecione apenas um usuario de cada vez')
         else:
-            return HttpResponseRedirect("/vaivem/admin/procura/?q=%s&search_by=usuario&devolvido=not_matters" % queryset[0].matricula)
+            return HttpResponseRedirect("/admin/procura/?q=%s&search_by=usuario&devolvido=not_matters" % queryset[0].matricula)
 
     listar_emprestimos.short_description = "Listar emprestimos"
+
+
+# update 'atualizacao_cadastral' of the equipments to today
+# action que altera data de atualizacao_cadastral para hoje
+    def atualizar_cadastro(modeladmin, request, queryset):
+        if len(queryset) > 1:
+            messages.error(request, 'Erro! Selecione apenas um usuario de cada vez')
+        else:
+            for usuario in queryset:
+                Usuario.objects.filter(matricula = usuario.matricula).update(atualizacao_cadastral=datetime.date.today())
+                modeladmin.message_user(request, "Atualização cadastral realizada")
+
+    atualizar_cadastro.short_description = "Realizar atualização cadastral"
 
 
 class EquipamentoAdmin(admin.ModelAdmin):
@@ -59,7 +72,7 @@ class EquipamentoAdmin(admin.ModelAdmin):
         if len(queryset) > 1:
             messages.error(request, 'Erro! Selecione apenas um equipamento de cada vez')
         else:
-            return HttpResponseRedirect("/vaivem/admin/procura/?q=%s&search_by=equipamento&devolvido=not_matters" % queryset[0].tombo)
+            return HttpResponseRedirect("/admin/procura/?q=%s&search_by=equipamento&devolvido=not_matters" % queryset[0].tombo)
 
     listar_emprestimos.short_description = "Listar emprestimos"
 
@@ -155,7 +168,7 @@ class EmprestimoAdmin(admin.ModelAdmin):
         if len(queryset) > 1:
             messages.error(request, 'Erro! Selecione apenas um empréstimo de cada vez')
         else:
-            return HttpResponseRedirect("/vaivem/admin/comprovante/emprestimo/%s" % queryset[0].id)
+            return HttpResponseRedirect("/admin/comprovante/emprestimo/%s" % queryset[0].id)
 
     comprovante_emprestimo.short_description = "Abrir comprovante de empréstimo"
 

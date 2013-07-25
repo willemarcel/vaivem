@@ -39,9 +39,10 @@ class Usuario(models.Model):
     email = models.EmailField(max_length=75)
     telefone = models.CharField(max_length=15)
     endereco = models.TextField('Endereço', max_length=200)
-    suspensao = models.DateField('Suspenso até:', default=datetime.date(2010, 9, 7), null=True)
+    suspensao = models.DateField('Suspenso até', default=datetime.date(2010, 9, 7), null=True)
     disponivel = models.BooleanField(default=True)
     observacoes = models.TextField('Observações', max_length=300, blank=True)
+    atualizacao_cadastral = models.DateField('Última atualização de cadastro', auto_now_add=True)
     def __unicode__(self):
         return self.nome
 
@@ -63,7 +64,7 @@ class Equipamento(models.Model):
     categoria = models.CharField(max_length=50, choices=CATEG_EQUIPOS)
     disponivel = models.BooleanField(default=True)
     observacoes = models.TextField('Observações', max_length=300, blank=True)
-    ultimo_inventario = models.DateField('Inventariado em', null=True)
+    ultimo_inventario = models.DateField('Data do último inventário', null=True)
     def __unicode__(self):
         return u'%s - %s' % (self.tombo, self.nome)
 
@@ -71,7 +72,7 @@ class Equipamento(models.Model):
 class Emprestimo(models.Model):
     id = models.AutoField(primary_key=True)
     itens = models.ManyToManyField('Equipamento', limit_choices_to = {'disponivel':True})
-    usuario = models.ForeignKey('Usuario', limit_choices_to = {'disponivel':True, 'suspensao__lte':datetime.date.today()})
+    usuario = models.ForeignKey('Usuario', limit_choices_to = {'disponivel':True, 'suspensao__lte':datetime.date.today(), 'atualizacao_cadastral__gte':datetime.date(2013,7,20)})
     data_emprestimo = models.DateTimeField('Data de Empréstimo', auto_now_add=True)
     prazo_devolucao = models.DateTimeField('Prazo para Devolução', null=True)
     data_devolucao = models.DateTimeField('Data de Devolução', null=True)
