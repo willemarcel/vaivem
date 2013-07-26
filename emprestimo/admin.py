@@ -122,9 +122,9 @@ class EmprestimoAdmin(admin.ModelAdmin):
 # processo de devolução de itens
     def devolucao(modeladmin, request, queryset):
         if len(queryset) > 1:
-            modeladmin.message_user(request, "Não é possível efetuar mais de uma devolução ao mesmo tempo")
+            messages.error(request, "Não é possível efetuar mais de uma devolução ao mesmo tempo")
         elif len(Emprestimo.objects.filter(id__in = queryset).filter(devolvido = 'True')) > 0:
-            modeladmin.message_user(request, "O empréstimo já foi devolvido")
+            messages.error(request, "O empréstimo já foi devolvido")
         else:
             if 'post' in request.POST:
                 Equipamento.objects.filter(emprestimo__in = queryset).update(disponivel = True)
@@ -153,6 +153,7 @@ class EmprestimoAdmin(admin.ModelAdmin):
                         Usuario.objects.filter(emprestimo = emp).update(suspensao = multa.date() , disponivel=True)
                     else:
                         Usuario.objects.filter(emprestimo = emp).update(disponivel = True)
+
 
                 modeladmin.message_user(request, "Empréstimo devolvido com sucesso!")
                 # Return to the list page

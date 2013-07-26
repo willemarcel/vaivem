@@ -72,7 +72,7 @@ class Equipamento(models.Model):
 class Emprestimo(models.Model):
     id = models.AutoField(primary_key=True)
     itens = models.ManyToManyField('Equipamento', limit_choices_to = {'disponivel':True})
-    usuario = models.ForeignKey('Usuario', limit_choices_to = {'disponivel':True, 'suspensao__lte':datetime.date.today(), 'atualizacao_cadastral__gte':datetime.date(2013,7,20)})
+    usuario = models.ForeignKey('Usuario', limit_choices_to = {'suspensao__lte':datetime.date.today(), 'atualizacao_cadastral__gte':datetime.date(2013,7,20)})
     data_emprestimo = models.DateTimeField('Data de Empréstimo', auto_now_add=True)
     prazo_devolucao = models.DateTimeField('Prazo para Devolução', null=True)
     data_devolucao = models.DateTimeField('Data de Devolução', null=True)
