@@ -30,7 +30,7 @@ class UsuarioAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':40})},
     }
-    actions = ['listar_emprestimos', 'atualizar_cadastro']
+    actions = ['listar_emprestimos', 'atualizar_cadastro', 'retirar_suspensao']
 
 #action that lists loans of a user
 #action que lista empréstimos de um usuario
@@ -43,17 +43,30 @@ class UsuarioAdmin(admin.ModelAdmin):
     listar_emprestimos.short_description = "Listar emprestimos"
 
 
-# update 'atualizacao_cadastral' of the equipments to today
+# update 'atualizacao_cadastral' of a user to today
 # action que altera data de atualizacao_cadastral para hoje
     def atualizar_cadastro(modeladmin, request, queryset):
         if len(queryset) > 1:
             messages.error(request, 'Erro! Selecione apenas um usuario de cada vez')
         else:
             for usuario in queryset:
-                Usuario.objects.filter(matricula = usuario.matricula).update(atualizacao_cadastral=datetime.date.today())
+                Usuario.objects.filter(matricula = usuario.matricula).update(atualizacao_cadastral = datetime.date.today())
                 modeladmin.message_user(request, "Atualização cadastral realizada")
 
     atualizar_cadastro.short_description = "Realizar atualização cadastral"
+
+
+# update 'atualizacao_cadastral' of the equipments to yesterday
+# action que muda data de suspensão para o dia anterior
+    def retirar_suspensao(modeladmin, request, queryset):
+        if len(queryset) > 1:
+            messages.error(request, 'Erro! Selecione apenas um usuario de cada vez')
+        else:
+            for usuario in queryset:
+                Usuario.objects.filter(matricula = usuario.matricula).update(suspensao = datetime.date.today() - datetime.timedelta(1))
+                modeladmin.message_user(request, "Suspensão retirada com sucesso")
+
+    retirar_suspensao.short_description = "Retirar suspensão"
 
 
 class EquipamentoAdmin(admin.ModelAdmin):
