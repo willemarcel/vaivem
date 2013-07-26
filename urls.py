@@ -9,8 +9,9 @@
 #
 
 
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, include, url
 from vaivem.emprestimo.views import page404
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 handler404 = page404
 # Uncomment the next two lines to enable the admin:
@@ -18,7 +19,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^', include('emprestimo.urls', namespace='emprestimo')),
+    url(r'^', include('vaivem.emprestimo.urls', namespace='emprestimo')),
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
 )
+
+urlpatterns += staticfiles_urlpatterns()

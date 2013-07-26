@@ -9,7 +9,7 @@
 #
 
 
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, url
 from vaivem.emprestimo.views import emprestimosindex, comprovanteemprestimo, relatorio, search_form, search, stats
 
 
