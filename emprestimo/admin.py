@@ -77,7 +77,7 @@ class EquipamentoAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs = {'rows':3, 'cols':40})},
     }
-    actions = ['nao_disponivel', 'tornar_disponivel', 'listar_emprestimos', 'checar']
+    actions = ['inventariar', 'listar_emprestimos', 'tornar_disponivel', 'nao_disponivel']
 
 # list loans of a equipament
 # lista emprestimos de um equipamento
