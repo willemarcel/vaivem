@@ -8,10 +8,9 @@
 #  License version 3 (AGPLv3) as published by the Free
 #  Software Foundation. See the file README for copying conditions.
 #
-
-from vaivem.emprestimo.models import Usuario, Equipamento, Emprestimo
-from django.contrib import admin, messages
 import datetime
+
+from django.contrib import admin, messages
 from django.forms import Textarea
 from django.db import models
 from django.middleware import csrf
@@ -20,6 +19,8 @@ from django import template
 from django.http import HttpResponseRedirect
 from django.contrib.admin import helpers
 from django.contrib.auth.models import User, check_password
+
+from .models import Usuario, Equipamento, Emprestimo
 
 
 class UsuarioAdmin(admin.ModelAdmin):
@@ -41,7 +42,6 @@ class UsuarioAdmin(admin.ModelAdmin):
             return HttpResponseRedirect("/admin/procura/?q=%s&search_by=usuario&devolvido=not_matters" % queryset[0].matricula)
 
     listar_emprestimos.short_description = "Listar emprestimos"
-
 
 # update 'atualizacao_cadastral' of a user to today
 # action que altera data de atualizacao_cadastral para hoje
@@ -89,7 +89,7 @@ class EquipamentoAdmin(admin.ModelAdmin):
 
     listar_emprestimos.short_description = "Listar emprestimos"
 
-# modify the status of the equipment to disponible = True 
+# modify the status of the equipment to disponible = True
 # action que altera status do equipamento para disponivel = False
     def nao_disponivel(modeladmin, request, queryset):
         for equipo in queryset:
@@ -98,7 +98,7 @@ class EquipamentoAdmin(admin.ModelAdmin):
 
     nao_disponivel.short_description = "Marcar como Indisponivel"
 
-# modify the status of the equipment to disponible only if it's not loan 
+# modify the status of the equipment to disponible only if it's not loan
 # action que altera status do equipamento para disponivel = True, caso ele nao esteja emprestado
     def tornar_disponivel(modeladmin, request, queryset):
         if len(Emprestimo.objects.filter(itens__in = queryset).filter(devolvido = False)) > 0:
@@ -130,7 +130,6 @@ class EmprestimoAdmin(admin.ModelAdmin):
     list_filter = ['devolvido', 'data_emprestimo', 'prazo_devolucao', 'data_devolucao']
     actions = ['devolucao', 'comprovante_emprestimo']
 
-
 # itens handover process
 # processo de devolução de itens
     def devolucao(modeladmin, request, queryset):
@@ -144,7 +143,7 @@ class EmprestimoAdmin(admin.ModelAdmin):
                 queryset.update(devolvido='True', data_devolucao = datetime.datetime.now(), funcionario_devolucao = request.user)
 
 
-                # apply fees, if the handover is outdate 
+                # apply fees, if the handover is outdate
                 # calcula e aplica multas, se a devolução for realizada com atraso
                 for emp in queryset:
                     atraso = emp.data_devolucao - emp.prazo_devolucao

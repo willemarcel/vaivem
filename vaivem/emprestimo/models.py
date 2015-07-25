@@ -9,9 +9,11 @@
 #  Software Foundation. See the file README for copying conditions.
 #
 
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
-import datetime
+
 
 
 class Usuario(models.Model):

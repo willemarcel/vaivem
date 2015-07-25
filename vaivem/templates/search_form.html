@@ -13,10 +13,10 @@
     {% if error %}
         <p style="color: red;">Por favor, digite um termo de busca.</p>
     {% endif %}
-    
+
     <p><h3>Procurar Empréstimos</h3></p><br />
-    
-    <form action="/admin/procura/" method="get">
+
+    <form action="{% url 'emprestimo:procura' %}" method="get">
         <p><input type="text" name="q" id="q" size="30" title="Digite o tombo, em caso de busca por equipamento, ou a matrícula, em caso de busca por usuário" />  <input type="submit" value="Procurar"></p><br />
         <p><b>Procurar por:</b></p>
         <p><input type="radio" checked="checked" value="equipamento" name="search_by"> <span>Equipamento</span><br />
@@ -26,6 +26,6 @@
         <input type="radio" value="true" name="devolvido"> <span>Devolvidos</span><br />
         <input type="radio" value="false" name="devolvido"> <span>Não devolvidos</span></p>
     </form>
-    
+
 {% endblock %}
 

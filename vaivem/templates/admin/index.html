@@ -53,13 +53,13 @@
     <div class="module">
         <table >
             <tr>
-                <th scope="row"><a href="{% url 'emprestimo:emprestimosindex' %}">Comprovantes de Empréstimo</th>
+                <th scope="row"><a href="{% url 'emprestimo:comprovantes' %}">Comprovantes de Empréstimo</th>
             </tr>
             <tr>
-            <th scope="row"><a href="/admin/buscador/">Procurar Empréstimos</th>
+            <th scope="row"><a href="{% url 'emprestimo:buscador' %}">Procurar Empréstimos</th>
             </tr>
             <tr>
-            <th scope="row"><a href="/admin/stats/">Estatísticas</th>
+            <th scope="row"><a href="{% url 'emprestimo:stats' %}">Estatísticas</th>
             </tr>
         </table>
     </div>

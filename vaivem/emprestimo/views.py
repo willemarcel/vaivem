@@ -8,15 +8,17 @@
 #  License version 3 (AGPLv3) as published by the Free
 #  Software Foundation. See the file README for copying conditions.
 #
+import qsstats
+
+import datetime
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
-import datetime
-from vaivem.emprestimo.models import Equipamento, Emprestimo, Usuario
 from django.core.exceptions import ObjectDoesNotExist
-import qsstats
-from django.db.models import F, Count
 from django.contrib.auth.decorators import login_required
+from django.db.models import F, Count
+
+from .models import Equipamento, Emprestimo, Usuario
 
 
 def index(request):
@@ -66,7 +68,7 @@ def search_form(request):
 def search(request):
     if 'q' in request.GET and request.GET['q']:
         q = request.GET['q']
-        
+
         if request.GET['search_by'] == "equipamento":
             try:
                 emps = Equipamento.objects.get(tombo=q).emprestimo_set.order_by('-id')
@@ -82,7 +84,7 @@ def search(request):
             emps = emps.filter(devolvido=True)
         elif request.GET['devolvido'] == "false":
             emps = emps.filter(devolvido=False)
-            
+
         return render_to_response('search_results.html', {'emprestimos': emps, 'query': q})
     else:
         return render_to_response('search_form.html', {'error': True})
@@ -97,8 +99,8 @@ def stats(request):
             month = request.GET['month']
             qs = Emprestimo.objects.filter(data_emprestimo__year=year, data_emprestimo__month=month)
 
-            results = [('Devolvidos com atraso', qs.filter(devolvido=True, prazo_devolucao__lt=F('data_devolucao')).count()), 
-                        ('Devolvidos no prazo', qs.filter(devolvido=True, prazo_devolucao__gt=F('data_devolucao')).count()), 
+            results = [('Devolvidos com atraso', qs.filter(devolvido=True, prazo_devolucao__lt=F('data_devolucao')).count()),
+                        ('Devolvidos no prazo', qs.filter(devolvido=True, prazo_devolucao__gt=F('data_devolucao')).count()),
                         ('Não devolvidos', qs.filter(devolvido=False).count())]
 
             top_equipos = Equipamento.objects.filter(emprestimo__data_emprestimo__year=year, emprestimo__data_emprestimo__month=month).values('nome').annotate(num_emp=Count('emprestimo')).order_by('-num_emp')[:15]
@@ -132,8 +134,8 @@ def stats(request):
             return render_to_response('stats-by-year.html', {'year': year, 'results': zip(months, number_loans, no_delayed, delayed), 'total_year': qs.count()})
 
     else:
-        years = Emprestimo.objects.all().dates("data_emprestimo", "year")
-        return render_to_response('stats.html', {'years': years})  
+        years = Emprestimo.objects.all().datetimes("data_emprestimo", "year")
+        return render_to_response('stats.html', {'years': years})
 
 def page404(request):
     return render_to_response('404.html')
