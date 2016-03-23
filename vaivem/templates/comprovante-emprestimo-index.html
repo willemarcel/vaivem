@@ -11,7 +11,8 @@
 {% block content %}
     <p>{% blocktrans %}Selecione o empréstimo que deseja visualizar:{% endblocktrans %}</p>
     {% for obj in emps %}
-        <ul>{{ obj.data_emprestimo.date }} - ID: <a href ="{{ obj }}" class="viewsitelink">{{ obj }} / {{ obj.usuario }}</a></ul>
+        <ul>{{ obj.data_emprestimo.date }} - ID:
+          <a href ="{% url 'emprestimo:comprovanteemprestimo' obj.pk %}" class="viewsitelink">{{ obj.id }} / {{ obj.usuario.matricula }}</a></ul>
     {% endfor %}
 
 

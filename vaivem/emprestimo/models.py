@@ -15,7 +15,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-
 class Usuario(models.Model):
     class Meta:
         ordering = ('nome',)
@@ -45,6 +44,7 @@ class Usuario(models.Model):
     disponivel = models.BooleanField(default=True)
     observacoes = models.TextField('Observações', max_length=300, blank=True)
     atualizacao_cadastral = models.DateField('Última atualização de cadastro', auto_now_add=True)
+
     def __unicode__(self):
         return self.nome
 
@@ -67,6 +67,7 @@ class Equipamento(models.Model):
     disponivel = models.BooleanField(default=True)
     observacoes = models.TextField('Observações', max_length=300, blank=True)
     ultimo_inventario = models.DateField('Data do último inventário', null=True)
+
     def __unicode__(self):
         return u'%s - %s' % (self.tombo, self.nome)
 
@@ -81,7 +82,6 @@ class Emprestimo(models.Model):
     devolvido = models.BooleanField(default=False)
     funcionario_emprestimo = models.ForeignKey(User, related_name="%(class)s_emprestimo", null=True)
     funcionario_devolucao = models.ForeignKey(User, related_name="%(class)s_devolucao", null=True)
+
     def __unicode__(self):
         return str(self.id)
-
-

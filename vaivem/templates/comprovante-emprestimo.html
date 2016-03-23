@@ -14,15 +14,15 @@
 <div style="float:left; width: 50%; padding-right:20px">
     <p>{% blocktrans %}<b>Empréstimo de Equipamentos</b>{% endblocktrans %}</p>
     <p>{% blocktrans %}Termo de Responsabilidade - <b>Nº {{ obj }}</b> {% endblocktrans %}</p>
-        <p>1ª via - <b>NUATE - CAHL</b></p><br>
-        <p>Usuário: <b>{{ obj.usuario }}</b><br>
+        <p>1ª via - <b>Setor Responsável</b></p><br>
+        <p>Usuário: <b>{{ obj.usuario.nome }}</b><br>
         Matrícula: <b>{{ obj.usuario.matricula }}</b></p>
         <p>Data: {{ data_emp }}</p><br>
 
     <p>Itens:</p>
         <ul>
             {% for item in obj.itens.all %}
-            <li>{{ item }}</li>
+            <li>{{ item.tombo }} - {{ item.nome }}</li>
             {% endfor %}
         </ul><br>
 
@@ -31,7 +31,7 @@
 
     <p>Assinatura do Usuário: ___________________________________</p>
     <p>------------------------</p><br>
-    
+
     <p><b>Data de devolução:</b> ____/____/______ às ____:____</p>
     <p>Funcionário: ___________________________________</p><br><br>
 </div>
@@ -40,14 +40,14 @@
     <p>{% blocktrans %}<b>Empréstimo de Equipamentos</b>{% endblocktrans %}</p>
     <p>{% blocktrans %}Termo de Responsabilidade - <b>Nº {{ obj }}</b> {% endblocktrans %}</p>
         <p>2ª via - <b>Usuário</b></p><br>
-        <p>Usuário: <b>{{ obj.usuario }}</b><br>
+        <p>Usuário: <b>{{ obj.usuario.nome }}</b><br>
         Matrícula: <b>{{ obj.usuario.matricula }}</b></p>
         <p>Data: {{ data_emp }}</p><br>
 
     <p>Itens:</p>
         <ul>
             {% for item in obj.itens.all %}
-            <li>{{ item }}</li>
+            <li>{{ item.tombo }} - {{ item.nome }}</li>
             {% endfor %}
         </ul><br>
 
@@ -56,7 +56,7 @@
     <p>Assinatura do Funcionário: ___________________________________</p>
     <p>Funcionário responsável: <b>{{ obj.funcionario_emprestimo.first_name }} {{ obj.funcionario_emprestimo.last_name }}</b></p>
     <p>------------------------</p><br>
-    
+
     <p><b>Data de devolução:</b> ____/____/______ às ____:____</p>
     <p>Funcionário: ___________________________________</p><br><br>
     <p><i>Guarde este comprovante e exija a assinatura do funcionário no momento da devolução do equipamento. Este documento comprova que você devolveu o equipamento no prazo correto. Em caso de atraso, serão aplicadas penalidades.</i></p>
